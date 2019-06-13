@@ -1,0 +1,27 @@
+<aura:component controller="NewCaseTimeEntryCX" implements="force:lightningQuickActionWithoutHeader,force:hasRecordId">
+
+    <!-- The parent case record -->
+    <aura:attribute name="caseRecord" type="Case" />
+    <!-- The case time entry record we are creating -->
+    <aura:attribute name="caseTimeEntry" type="Map" default="{Time_Spent__c:'0.25'}" />
+    <!-- Stores the project Id options  -->
+    <aura:attribute name="projectTasks" type="Object" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <lightning:card iconName="standard:timesheet_entry" title="New Case Time Entry">
+        <aura:set attribute="actions">
+            <lightning:button iconName="utility:save" variant="brand" label="Save" title="Save" onclick="{!c.handleSave}" />
+        </aura:set>
+        <lightning:input aura:id="caseNumber" name="caseId" label="Case" value="{!v.caseRecord.CaseNumber}" disabled="true" />
+        <lightning:select label="Task Type" value="{!v.caseTimeEntry.Project_Task__c}" required="true" aura:id="taskType" onchange="{!c.nonBillWarning}">
+            <aura:iteration items="{!v.projectTasks}" var="opt" indexVar="count">
+                <option value="{!opt.Id}">{!opt.Name}</option>
+            </aura:iteration>
+        </lightning:select>
+        <lightning:input type="number" step="0.25" min="0.25" aura:id="timeSpent" name="hoursWorked" label="Time Spent" value="{!v.caseTimeEntry.Time_Spent__c}" required="true" />
+        <lightning:input type="date" aura:id="cteDate" name="date" label="Date" value="{!v.caseTimeEntry.Date__c}" required="true" />
+        <lightning:input type="textarea" aura:id="comments" name="comments" label="Comments" value="{!v.caseTimeEntry.Comments__c}" required="true" />
+        <lightning:input type="checkbox" aura:id="excluded" name="excluded" label="Exclude from Time Entry Automation" onclick="{!c.handleCheck}" />
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,38 @@
+<apex:page standardController="Case_Time_Entry__c" showHeader="true" sidebar="true" extensions="NewCaseTimeEntryCX" lightningStylesheets="true" action="{!doRedirect}">
+    <apex:slds />
+    <apex:form id="mainForm">
+        <apex:sectionHeader title="Case Time Entry Edit" subtitle="New Case Time Entry"/>
+        <apex:pageBlock title="Case Time Entry Edit" mode="edit">
+            <apex:pageMessages />
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!doSave}" value="Save"/>
+                <apex:commandButton action="{!doSaveAndNew}" value="Save and New"/>
+                <apex:commandButton action="{!doCancel}" value="Cancel" immediate="true"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection title="Information" columns="2">
+                <apex:inputField value="{!cteRec.Date__c}"/>
+                <apex:outputField value="{!cteRec.Case__c}"/>
+                <apex:inputField value="{!cteRec.Time_Spent__c}"/>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Project Task" for="project_task"/>
+                    <apex:selectList value="{!projectTaskId}" id="project_task" size="1" onchange="nonBillableWarning(this);">
+                        <apex:selectOptions value="{!taskTypes}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:inputField value="{!cteRec.Comments__c}"/>
+                <apex:inputField value="{!cteRec.Exclude_from_Time_Entry_Automation__c}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    
+    <script>
+        function nonBillableWarning(ele) {
+            var selectElement = document.getElementById(ele.id);
+            var value = selectElement.options[selectElement.selectedIndex].text;
+            console.log('value: ' + value);
+            if(value.match(/[nN]on*(-*|\s*)[bB]ill.*/g) != null) {
+                alert('For non-billable tasks, please seek approval from the CSM of this project before filing this case time entry.');
+            }
+        }
+    </script>
+</apex:page>
