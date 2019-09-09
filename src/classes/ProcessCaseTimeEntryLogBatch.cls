@@ -150,20 +150,9 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
                                             AND pse__End_Date__c IN :endDates
                                             AND Practice__c LIKE 'Managed%Services']) {
             //Reset the timecard header hours and comments to cater the updates regarding the case time entries
-            tc.pse__Sunday_Hours__c = 0;
-            tc.pse__Sunday_Notes__c = '';
-            tc.pse__Monday_Hours__c = 0;
-            tc.pse__Monday_Notes__c = '';
-            tc.pse__Tuesday_Hours__c = 0;
-            tc.pse__Tuesday_Notes__c = '';
-            tc.pse__Wednesday_Hours__c = 0;
-            tc.pse__Wednesday_Notes__c = '';
-            tc.pse__Thursday_Hours__c = 0;
-            tc.pse__Thursday_Notes__c = '';
-            tc.pse__Friday_Hours__c = 0;
-            tc.pse__Friday_Notes__c = '';
-            tc.pse__Saturday_Hours__c = 0;
-            tc.pse__Saturday_Notes__c = '';
+            if(isFirstBatch == true) {
+                tc.put('pse__' + dayOfWeekStr[dayOfWeek] + '_Notes__c', '');
+            }
             mapExistingTimecards.put('' + tc.pse__Assignment__c + tc.pse__Start_Date__c.format() + tc.pse__End_Date__c.format(), tc);
         }
 
