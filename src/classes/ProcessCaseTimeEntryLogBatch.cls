@@ -243,6 +243,7 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
             Database.UpsertResult[] srList = Database.upsert(mapExistingTimecards.values(), false);
 
             // Iterate through each returned result
+            Integer idx = 0;
             for (Database.UpsertResult sr : srList) {
                 if (!sr.isSuccess()) {
                     // Operation failed, so get all errors                
@@ -251,8 +252,11 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
                         br.Debug_Messages__c += 'The following error has occurred.\n';
                         br.Debug_Messages__c += err.getStatusCode() + ': ' + err.getMessage() + '\n';
                         br.Debug_Messages__c += 'Error Location: Database.upsert(mapExistingTimecards.values());\n';
+                        br.Debug_Messages__c += 'Failed Timecard Header record info:\n';
+                        br.Debug_Messages__c += JSON.serialize(mapExistingTimecards.values().get(idx)) + '\n';
                     }
                 }
+                idx += 1;
             }
         }
 
