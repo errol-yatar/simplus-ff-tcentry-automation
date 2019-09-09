@@ -312,6 +312,18 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
         }
 
         for(Case_Time_Entry_Log__c cteLog : scope) {
+            // From the map we created earlier, we can determine the timecard record we will attach this task time record to
+            // using the case time entry combinations of values from case time entries as key
+            String tch_key = '' + cteLog.Assignment_ctl__c + cteLog.StartDateFormula_ctl__c.format() + cteLog.EndDateFormula_ctl__c.format();
+
+            // Check if the key fits inside the keyhole
+            if (!mapExistingTimecards.containsKey(tch_key) || mapExistingTimecards.get(tch_key) == null) {
+                br.No_of_Errors__c += 1;
+                br.Debug_Messages__c += 'No timecard header found for this case time entry log record: \n';
+                br.Debug_Messages__c += JSON.serialize(cteLog) + '\n';
+                continue;
+            }
+
             // Create the task time record using the values from the case time entry log.
             pse__Task_Time__c tt = null;
             // Key: 'Assignment Id + Start Date + Project Type Id' as a key.
@@ -348,12 +360,11 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
                 // Master detail fields are not writeable if we cannot reparent the record that is already inserted.
                 // that's why we have this null check for the Id, meaning if the record is not yet inserted
                 if(tt.Id == null) {                    
-                    // From the map we created earlier, we can determine the timecard record we will attach this task time record to
-                    // using the case time entry combinations of values from case time entries as key
-                    String key = cteLog.Assignment_ctl__c + cteLog.StartDateFormula_ctl__c.format() + cteLog.EndDateFormula_ctl__c.format();
-                    tt.pse__Timecard__c = mapExistingTimecards.get(key).Id;
+                    tt.pse__Timecard__c = mapExistingTimecards.get(tch_key).Id;
+                }
 
-                    // Set the project task to the matching project task id.
+                // Set the project task to the matching project task id.
+                if(tt.pse__Project_Task__c == null) {
                     tt.pse__Project_Task__c = cteLog.Task_Type_ctl__c;
                 }
 
