@@ -17,6 +17,10 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
     // Variables for batch logging
     global Batch_Run__c br;
 
+    // Store the current day here
+    global Integer dayOfWeek = 0; // 0 is Monday, 1 is Tuesday, 2 is Wednesday so forth and so on..
+
+    global final List<String> dayOfWeekStr = new List<String>{'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'};
 
     // Default constructor
     global ProcessCaseTimeEntryLogBatch() {
