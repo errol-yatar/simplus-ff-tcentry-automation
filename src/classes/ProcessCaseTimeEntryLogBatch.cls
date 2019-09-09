@@ -57,6 +57,7 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
         Date mondayDate = referenceDate - Integer.valueOf(Math.mod(dateDiff,7));
         mondayDate = mondayDate.addDays(1);
         Date sundayDate = mondayDate.addDays(6);
+        Date currentDate = mondayDate.addDays(dayOfWeek);
         br.Debug_Messages__c += ('mondayDate: ' + mondayDate + '\n');
         br.Debug_Messages__c += ('sundayDate: ' + sundayDate + '\n');
 
@@ -101,6 +102,7 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
 						'WHERE StartDateFormula_ctl__c = :mondayDate ' +
                         '   AND EndDateFormula_ctl__c = :sundayDate' + 
                         '   AND Resource_ctl__r.pse__Salesforce_User__c IN :usersId' + 
+                        '   AND Task_Date__c = :currentDate' + 
                         '   AND Parent_Case_Time_Entry__r.Exclude_from_Time_Entry_Automation__c = false';
 		return Database.getQueryLocator(query);
 	}
