@@ -440,6 +440,9 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
 
         // Please try to make this line of code at the most bottom part possible
         br.Number_of_Successful_Batches__c += 1;
+
+        // Set isFirstBatch to false so that the hours and notes doesn't reset
+        isFirstBatch = false;
 	}
 	
 	global void finish(Database.BatchableContext bc) {
