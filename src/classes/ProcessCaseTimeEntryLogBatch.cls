@@ -22,6 +22,10 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
 
     global final List<String> dayOfWeekStr = new List<String>{'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'};
 
+    //We need to check if this the first batch of the job, so we won't do unnecessary resets.
+    global Boolean isFirstBatch = true;
+
+
     // Default constructor
     global ProcessCaseTimeEntryLogBatch() {
         this.referenceDate = Date.today();
