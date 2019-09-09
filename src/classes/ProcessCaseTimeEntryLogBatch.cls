@@ -214,7 +214,9 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
             // Fill in the hours and notes depending on what day the case time entry log is
             String limitMessage = Label.TCAuto_CharLimitMsg;
             tc.put('pse__' + cteLog.Day_of_the_Week_ctl__c + '_Hours__c', Double.valueOf(tc.get('pse__' + cteLog.Day_of_the_Week_ctl__c + '_Hours__c')) + cteLog.Time_Spent_ctl__c);
-            String combinedString = (String.isEmpty(String.valueOf(tc.get('pse__' + cteLog.Day_of_the_Week_ctl__c + '_Notes__c'))) ? '' : (tc.get('pse__' + cteLog.Day_of_the_Week_ctl__c + '_Notes__c') + ' | ')) + taskComment;
+            String combinedString = (String.isEmpty(String.valueOf(tc.get('pse__' + cteLog.Day_of_the_Week_ctl__c + '_Notes__c'))) 
+                                        ? '' 
+                                        : (tc.get('pse__' + cteLog.Day_of_the_Week_ctl__c + '_Notes__c') + ' | ')) + taskComment;
             if(combinedString.length() > 255 || tc.get('pse__' + cteLog.Day_of_the_Week_ctl__c + '_Notes__c') == limitMessage) {
                 // Create a case comment instead of appending to task notes
                 if(!cteLog.Case_Comment_Created__c) {
