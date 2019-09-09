@@ -60,6 +60,7 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
         Date currentDate = mondayDate.addDays(dayOfWeek);
         br.Debug_Messages__c += ('mondayDate: ' + mondayDate + '\n');
         br.Debug_Messages__c += ('sundayDate: ' + sundayDate + '\n');
+        br.Debug_Messages__c += 'Processing ' + dayOfWeekStr[dayOfWeek] + ' job of the week.\n';
 
         // Include users only in the timecard automation group.
         Set<Id> usersId = new Set<Id>();
@@ -111,6 +112,8 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
         br.Records_Processed__c += scope.size();
         br.Number_of_Batches__c += 1;
 
+        br.Debug_Messages__c += 'isFirstBatch: ' + isFirstBatch + '\n';
+
         // Create a list of Case Time Entry Logs to be updated later
         List<Case_Time_Entry_Log__c> cteLogToUpdate = new List<Case_Time_Entry_Log__c>();
         List<CaseComment> caseCommentList = new List<CaseComment>();
@@ -153,6 +156,7 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
             if(isFirstBatch == true) {
                 tc.put('pse__' + dayOfWeekStr[dayOfWeek] + '_Notes__c', '');
             }
+            br.Debug_Messages__c += 'current notes: ' + tc.get('pse__' + dayOfWeekStr[dayOfWeek] + '_Notes__c') + '\n';
             mapExistingTimecards.put('' + tc.pse__Assignment__c + tc.pse__Start_Date__c.format() + tc.pse__End_Date__c.format(), tc);
         }
 
@@ -160,6 +164,7 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
         // This will come in handy when we create the Task Time later.
         Set<Id> projectIds = new Set<Id>(); //This will be used later when we retrieve the project tasks.
         for(Case_Time_Entry_Log__c cteLog : scope) {
+            br.Debug_Messages__c += 'processing time entry log: ' + cteLog.Id + '\n';
             // Create the timecard record using the values from the case time entry log.
             pse__Timecard_Header__c tc;
             // Check if there is an existing timecard header for that assignment for that week.
@@ -308,6 +313,7 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
             if(isFirstBatch == true) {
                 tt.put('pse__' + dayOfWeekStr[dayOfWeek] + '_Hours__c', 0);
             }
+            br.Debug_Messages__c += 'current hours: ' + tt.get('pse__' + dayOfWeekStr[dayOfWeek] + '_Hours__c') + '\n';
             mapExistingTaskTimes.put('' + tt.pse__Timecard__r.pse__Assignment__c + tt.pse__Start_Date__c.format() + tt.pse__Project_Task__c, tt);
         }
 
