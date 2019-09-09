@@ -31,6 +31,12 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
         this.referenceDate = Date.today();
     }
 
+    // Constructor with day of week parameter, used in daisy chain
+    global ProcessCaseTimeEntryLogBatch(Integer dayOfWeek) {
+        this.referenceDate = Date.today();
+        this.dayOfWeek = dayOfWeek;
+    }
+
     // Constructor with reference date. Use this if you want to process time entries from a specific week.
     global ProcessCaseTimeEntryLogBatch(Date referenceDate) {
         this.referenceDate = referenceDate;
