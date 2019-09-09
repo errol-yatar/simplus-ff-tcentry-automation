@@ -303,8 +303,7 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
                                     FROM pse__Task_Time__c 
                                     WHERE pse__Project_Task__c IN :taskTypes 
                                         AND pse__Start_Date__c IN :tt_startDates
-                                        AND pse__Timecard__c IN :mapExistingTimecards.values() 
-                                        AND pse__Timecard__r.Practice__c LIKE 'Managed%Services']) {
+                                        AND pse__Timecard__c IN :mapExistingTimecards.values()]) {
             //Reset the task time hours and comments to cater the updates regarding the case time entries
             tt.pse__Sunday_Hours__c = 0;
             tt.pse__Sunday_Notes__c = '';
