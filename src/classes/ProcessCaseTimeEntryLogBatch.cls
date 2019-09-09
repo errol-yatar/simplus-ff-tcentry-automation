@@ -450,6 +450,11 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
         br.Execution_Finished_Time__c = DateTime.now();
         System.debug(br);
         insert br;
+
+        // Execute the batch for the next day if it is not Friday yet
+        if (dayOfWeek < 4 && !Test.isRunningTest()) {
+            Database.executeBatch(new ProcessCaseTimeEntryLogBatch(dayOfWeek + 1), 50);
+        }
 	}
 	
 }
