@@ -368,8 +368,8 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
                     tt.pse__Project_Task__c = cteLog.Task_Type_ctl__c;
                 }
 
-                // Fill in the hours and notes depending on what day the case time entry log is4
-                String hoursField = 'pse__' + cteLog.Day_of_the_Week_ctl__c + '_Hours__c';
+                // Fill in the hours and notes depending on what day the case time entry log is
+                String hoursField = 'pse__' + dayOfWeekStr[dayOfWeek] + '_Hours__c';
                 tt.put(hoursField, Double.valueOf(tt.get(hoursField)) + cteLog.Time_Spent_ctl__c);
             }
         }
