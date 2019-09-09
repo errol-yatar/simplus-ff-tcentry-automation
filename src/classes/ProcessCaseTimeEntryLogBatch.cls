@@ -305,20 +305,9 @@ global class ProcessCaseTimeEntryLogBatch implements Database.Batchable<sObject>
                                         AND pse__Start_Date__c IN :tt_startDates
                                         AND pse__Timecard__c IN :mapExistingTimecards.values()]) {
             //Reset the task time hours and comments to cater the updates regarding the case time entries
-            tt.pse__Sunday_Hours__c = 0;
-            tt.pse__Sunday_Notes__c = '';
-            tt.pse__Monday_Hours__c = 0;
-            tt.pse__Monday_Notes__c = '';
-            tt.pse__Tuesday_Hours__c = 0;
-            tt.pse__Tuesday_Notes__c = '';
-            tt.pse__Wednesday_Hours__c = 0;
-            tt.pse__Wednesday_Notes__c = '';
-            tt.pse__Thursday_Hours__c = 0;
-            tt.pse__Thursday_Notes__c = '';
-            tt.pse__Friday_Hours__c = 0;
-            tt.pse__Friday_Notes__c = '';
-            tt.pse__Saturday_Hours__c = 0;
-            tt.pse__Saturday_Notes__c = '';
+            if(isFirstBatch == true) {
+                tt.put('pse__' + dayOfWeekStr[dayOfWeek] + '_Hours__c', 0);
+            }
             mapExistingTaskTimes.put('' + tt.pse__Timecard__r.pse__Assignment__c + tt.pse__Start_Date__c.format() + tt.pse__Project_Task__c, tt);
         }
 
